@@ -64,6 +64,10 @@ enum MessageType {
 	MessageType_SignIdentity = 53 [(wire_in) = true];
 	MessageType_SignedIdentity = 54 [(wire_out) = true];
 	MessageType_GetFeatures = 55 [(wire_in) = true];
+	MessageType_GetEthereumAddress = 56 [(wire_in) = true];
+	MessageType_EthereumAddress = 57 [(wire_out) = true];
+	MessageType_SignEthereumTx = 58 [(wire_in) = true];
+	MessageType_EthereumSignedTx = 59 [(wire_out) = true];
 	MessageType_DebugLinkDecision = 100 [(wire_debug_in) = true];
 	MessageType_DebugLinkGetState = 101 [(wire_debug_in) = true];
 	MessageType_DebugLinkState = 102 [(wire_debug_out) = true];
@@ -282,11 +286,30 @@ message GetAddress {
 }
 
 /**
+ * Request: Ask device for Ethereum address corresponding to address_n path
+ * @next PassphraseRequest
+ * @next EthereumAddress
+ * @next Failure
+ */
+message GetEthereumAddress {
+	repeated uint32 address_n = 1;			// BIP-32 path to derive the key from master node
+	optional bool show_display = 2;			// optionally show on display before sending the result
+}
+
+/**
  * Response: Contains address derived from device private seed
  * @prev GetAddress
  */
 message Address {
 	required string address = 1;		// Coin address in Base58 encoding
+}
+
+/**
+ * Response: Contains an Ethereum address derived from device private seed
+ * @prev GetEthereumAddress
+ */
+message EthereumAddress {
+	required string address = 1;		// Coin address as an Ethereum hex string (with or without checksum)
 }
 
 /**
@@ -558,6 +581,30 @@ message TxRequest {
  */
 message TxAck {
 	optional TransactionType tx = 1;
+}
+
+/**
+ * Request: Ask device to sign transaction
+ * @next PassphraseRequest
+ * @next PinMatrixRequest
+ * @next TxRequest
+ * @next Failure
+ */
+message EthereumSignTx {
+        required bytes nonce = 1;
+        required bytes to = 2;
+        required bytes value = 3;
+        optional bytes data = 4;
+        required bytes gasPrice = 5;
+        optional bytes gasLimit = 6;
+}
+
+/**
+ * Response: Structure representing a signed transaction
+ * @prev EthereumSignTx
+ */
+message EthereumSignedTx {
+	required bytes rlp = 1;
 }
 
 ///////////////////////

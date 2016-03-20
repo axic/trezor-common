@@ -181,6 +181,7 @@ message TxOutputBinType {
 	required bytes script_pubkey = 2;
 }
 
+
 /**
  * Structure representing transaction
  * @used_in SimpleSignTx
