@@ -587,12 +587,12 @@ message TxAck {
  * Request: Ask device to sign transaction
  * @next PassphraseRequest
  * @next PinMatrixRequest
- * @next TxRequest
+ * @next EthereumSignedTx
  * @next Failure
  */
 message EthereumSignTx {
         required bytes nonce = 1;
-        required bytes to = 2;
+        required string to = 2;
         required bytes value = 3;
         optional bytes data = 4;
         required bytes gasPrice = 5;
