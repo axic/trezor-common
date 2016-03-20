@@ -591,12 +591,13 @@ message TxAck {
  * @next Failure
  */
 message EthereumSignTx {
-        required bytes nonce = 1;
-        required string to = 2;
-        required bytes value = 3;
-        optional bytes data = 4;
-        required bytes gasPrice = 5;
-        optional bytes gasLimit = 6;
+        repeated uint32 address_n = 1;		// BIP-32 path to derive the key from master node
+        required bytes nonce = 2;
+        required string to = 3;
+        required bytes value = 4;               // 256-bit number (big endian)
+        optional bytes data = 5;
+        required bytes gasPrice = 6;            // 256-bit number (big endian)
+        optional bytes gasLimit = 7;            // 256-bit number (big endian)
 }
 
 /**
